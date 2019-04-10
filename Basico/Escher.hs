@@ -32,3 +32,12 @@ dibujo_v p = ciclar (Rotar (dibujo_t p))
 esquina :: Int -> Dibujo Escher -> Dibujo Escher
 esquina 0 p = blanko
 esquina n p = cuarteto (esquina (n-1) p) (lado (n-1) p) (Rotar (lado (n-1) p)) (dibujo_u p) 
+
+-- lado con nivel de detalle en base a la figura p
+lado :: Int -> Dibujo Escher -> Dibujo Escher
+lado 0 p = blanko
+lado n p = cuarteto (lado (n - 1) p) (lado (n - 1) p) (Rotar (dibujo_t p)) (dibujo_t p)
+
+-- combinador de nueve figuras dentro de un espacio de dibujo
+noneto p q r s t u v w x = Apilar 2 1 (Juntar 2 1 p (Juntar 1 1 q r)) 
+                            (Apilar 1 1 (Juntar 2 1 s (Juntar 1 1 t u)) (Juntar 2 1 v (Juntar 1 1 w x))) 
