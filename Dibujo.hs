@@ -37,3 +37,18 @@ r270 = Rotar . Rotar . Rotar
 -- Dada una figura la repite en cuatro cuadrantes
 cuarteto :: Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a
 cuarteto x y z w = (.-.) ((///) x y) ((///) z w)
+
+-- una figura repetida con las cuatro rotaciones, superimpuestas.
+encimar4 :: Dibujo a -> Dibujo a
+--encimar4 x = (^^^) (Rot45 (Rot45 (Rot45 x))) ((^^^) (Rot45 (Rot45 x)) ((^^^) (Rot45 x) x))
+encimar4 x = (^^^) (erre 3) ((^^^) (erre 2) ((^^^) (erre 1) (erre 0)))
+            where erre k = (comp Rot45 k) x
+
+-- cuadrado con la misma figura rotada $i$ por $90$ para $i \in \{1..3\}$.
+-- No confundir con encimar4!
+ciclar :: Dibujo a -> Dibujo a
+ciclar x = cuarteto x (Rotar x) (r180 x) (r270 x) 
+
+-- ver un a como una figura
+pureDibe :: a -> Dibujo a
+pureDibe a = Basica a
