@@ -105,3 +105,31 @@ anyDib f x = sem f id id id (\i j x y -> x || y)
 allDib :: Pred a -> Dibujo a -> Bool
 allDib f x = sem f id id id (\i j x y -> x && y) 
             (\i j x y -> x && y) (\x y -> x && y) x
+
+-- describe la figura. Ejemplos: 
+--   desc (Basica b) (const "b") = "b"
+--   desc (Rotar fa) db = "rot (" ++ desc fa db ++ ")"
+-- la descripción de cada constructor son sus tres primeros
+-- símbolos en minúscula.
+desc :: (a -> String) -> Dibujo a -> String
+desc f x = sem f (\x -> "rot (" ++ x ++ ")")
+        (\x -> "esp (" ++ x ++ ")") (\x -> "r45 (" ++ x ++ ")")
+        (\i j x y -> "api (" ++ (show i) ++ " " ++ (show j) ++ " " ++ x ++ " " ++ y ++ ")")
+        (\i j x y -> "jun (" ++ (show i) ++ " " ++ (show j) ++ " " ++ x ++ " " ++ y ++ ")") 
+        (\x y -> "enc (" ++ x ++ " " ++ y ++ ")") x
+
+-- junta todas las figuras básicas de un dibujo
+every :: Dibujo a -> [a]
+every x = sem (\x -> [x]) id id id (\i j x y -> x ++ y) (\i j x y -> x ++ y) (\x y -> x ++ y) x
+
+-- cuenta la cantidad de veces que aparecen las básicas en una 
+-- figura.
+contar :: Eq a => Dibujo a -> [(a,Int)]
+contar x = sem (\x -> (\xs -> f x xs)) id id id ff ff (\f g -> (\xs -> f $ g xs)) x $ []
+    where 
+        f x [] = [(x,1)]
+        f x ((y,i):ys) = if x == y then (x,i+1) : ys else (y,i) : f x ys
+        ff = (\i j f g -> (\xs -> f $ g xs))
+
+
+
