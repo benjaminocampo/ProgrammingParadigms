@@ -158,3 +158,38 @@ esFlip2 (Encimar x y) = esFlip2 x || esFlip2 y
 check :: Pred (Dibujo a) -> String -> Dibujo a -> Either String (Dibujo a)
 check f s x = if f x then Left s else Right x
 
+-- Aplica todos los chequeos y acumula los errores,
+-- solo devuelve la figura si no hubo ningun error
+todoBien :: Dibujo a -> Either [String] (Dibujo a)
+todoBien x = case check esRot360 s1 x of
+                Left s1 -> case check esFlip2 s2 x of
+                    Left s2 -> Left (s1:[s2])
+                    Right x -> Left [s1]
+                Right x -> case check esFlip2 s2 x of
+                    Left s2 -> Left [s2]
+                    Right x -> Right x
+                where s1 = "No hay rotacion de 360"
+                      s2 = "No hay un flip"
+-- Borra 4 repeticions seguidas de Rotar
+noRot360 :: Dibujo a -> Dibujo a
+noRot360 (Rotar (Rotar (Rotar (Rotar x)))) = noRot360 x
+noRot360 (Basica x) = Basica x
+noRot360 (Rotar x) = Rotar (noRot360 x)
+noRot360 (Espejar x) = Espejar (noRot360 x)
+noRot360 (Rot45 x) = Rot45 (noRot360 x)
+noRot360 (Juntar i j x y) = Juntar i j (noRot360 x) (noRot360 y)
+noRot360 (Apilar i j x y) = Apilar i j (noRot360 x) (noRot360 y)
+noRot360 (Encimar x y) = Encimar (noRot360 x) (noRot360 y)
+
+-- Borra 2 repeticiones seguidas de Espejar
+noFlip2 :: Dibujo a -> Dibujo a
+noFlip2 (Espejar (Espejar x)) = noFlip2 x
+noFlip2 (Basica x) = Basica x
+noFlip2 (Rotar x) = Rotar (noFlip2 x)
+noFlip2 (Espejar x) = Espejar (noFlip2 x)
+noFlip2 (Rot45 x) = Rot45 (noFlip2 x)
+noFlip2 (Juntar i j x y) = Juntar i j (noFlip2 x) (noFlip2 y)
+noFlip2 (Apilar i j x y) = Apilar i j (noFlip2 x) (noFlip2 y)
+noFlip2 (Encimar x y) = Encimar (noFlip2 x) (noFlip2 y)
+
+
