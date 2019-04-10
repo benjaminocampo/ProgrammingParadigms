@@ -25,3 +25,15 @@ r270 = Rotar . Rotar . Rotar
 -- Pone una figura sobre la otra, ambas ocupan el mismo espacio
 (.-.) :: Dibujo a -> Dibujo a -> Dibujo a
 (.-.) x y = Apilar 1 1 x y
+
+-- Pone una figura al lado de la otra, ambas ocupan el mismo espacio
+(///) :: Dibujo a -> Dibujo a -> Dibujo a
+(///) x y = Juntar 1 1 x y
+
+-- Superpone una figura con otra
+(^^^) :: Dibujo a -> Dibujo a -> Dibujo a
+(^^^) x y = Encimar x y
+
+-- Dada una figura la repite en cuatro cuadrantes
+cuarteto :: Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a
+cuarteto x y z w = (.-.) ((///) x y) ((///) z w)
