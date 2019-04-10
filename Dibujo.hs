@@ -52,3 +52,39 @@ ciclar x = cuarteto x (Rotar x) (r180 x) (r270 x)
 -- ver un a como una figura
 pureDibe :: a -> Dibujo a
 pureDibe a = Basica a
+
+-- map para nuestro lenguaje
+mapDib :: (a -> b) -> Dibujo a -> Dibujo b
+mapDib f (Basica x) = Basica (f x)
+mapDib f (Rotar x) = Rotar (mapDib f x)
+mapDib f (Espejar x) = Espejar (mapDib f x)
+mapDib f (Rot45 x) = Rot45 (mapDib f x)
+mapDib f (Apilar i j x y) = Apilar i j (mapDib f x) (mapDib f y)
+mapDib f (Juntar i j x y) = Juntar i j (mapDib f x) (mapDib f y)
+mapDib f (Encimar x y) = Encimar (mapDib f x) (mapDib f y)
+
+cambia :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
+cambia f (Basica x) = f x
+cambia f (Rotar x) = Rotar (cambia f x)
+cambia f (Espejar x) = Espejar (cambia f x)
+cambia f (Rot45 x) = Rot45 (cambia f x)
+cambia f (Apilar i j x y) = Apilar i j (cambia f x) (cambia f y)
+cambia f (Juntar i j x y) = Juntar i j (cambia f x) (cambia f y)
+cambia f (Encimar x y) = Encimar (cambia f x) (cambia f y)
+
+-- Indica la semantica de nuestras figuras
+-- Aplica funciones según el tipo de figura
+-- que tengamos
+sem :: (a -> b) -> (b -> b) -> (b -> b) -> (b -> b) ->
+    (Int -> Int -> b -> b -> b) -> 
+    (Int -> Int -> b -> b -> b) -> 
+    (b -> b -> b) ->
+    Dibujo a -> b
+
+sem f1 f2 f3 f4 f5 f6 f7 (Basica x) = f1 x
+sem f1 f2 f3 f4 f5 f6 f7 (Rotar x) = f2 (sem f1 f2 f3 f4 f5 f6 f7 x)
+sem f1 f2 f3 f4 f5 f6 f7 (Espejar x) = f3 (sem f1 f2 f3 f4 f5 f6 f7 x)
+sem f1 f2 f3 f4 f5 f6 f7 (Rot45 x) = f4 (sem f1 f2 f3 f4 f5 f6 f7 x)
+sem f1 f2 f3 f4 f5 f6 f7 (Apilar i j x y) = f5 i j (sem f1 f2 f3 f4 f5 f6 f7 x) (sem f1 f2 f3 f4 f5 f6 f7 y)
+sem f1 f2 f3 f4 f5 f6 f7 (Juntar i j x y) = f6 i j (sem f1 f2 f3 f4 f5 f6 f7 x) (sem f1 f2 f3 f4 f5 f6 f7 y)
+sem f1 f2 f3 f4 f5 f6 f7 (Encimar x y) = f7 (sem f1 f2 f3 f4 f5 f6 f7 x) (sem f1 f2 f3 f4 f5 f6 f7 y)
