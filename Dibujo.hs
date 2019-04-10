@@ -88,3 +88,20 @@ sem f1 f2 f3 f4 f5 f6 f7 (Rot45 x) = f4 (sem f1 f2 f3 f4 f5 f6 f7 x)
 sem f1 f2 f3 f4 f5 f6 f7 (Apilar i j x y) = f5 i j (sem f1 f2 f3 f4 f5 f6 f7 x) (sem f1 f2 f3 f4 f5 f6 f7 y)
 sem f1 f2 f3 f4 f5 f6 f7 (Juntar i j x y) = f6 i j (sem f1 f2 f3 f4 f5 f6 f7 x) (sem f1 f2 f3 f4 f5 f6 f7 y)
 sem f1 f2 f3 f4 f5 f6 f7 (Encimar x y) = f7 (sem f1 f2 f3 f4 f5 f6 f7 x) (sem f1 f2 f3 f4 f5 f6 f7 y)
+
+type Pred a = a -> Bool
+
+-- Dado un predicado sobre basicas, cambiar todas las que satisfacen
+-- el predicado por una figura vacia
+limpia :: Pred a -> a -> Dibujo a -> Dibujo a
+limpia f vacia x = mapDib (\x -> if (f x) then vacia else x) x
+
+-- Alguna basica satisface el predicado
+anyDib :: Pred a -> Dibujo a -> Bool
+anyDib f x = sem f id id id (\i j x y -> x || y) 
+            (\i j x y -> x || y) (\x y -> x || y) x
+
+-- Todas las basicas satisfacen el predicado
+allDib :: Pred a -> Dibujo a -> Bool
+allDib f x = sem f id id id (\i j x y -> x && y) 
+            (\i j x y -> x && y) (\x y -> x && y) x
