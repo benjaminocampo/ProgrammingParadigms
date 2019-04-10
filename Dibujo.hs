@@ -131,5 +131,30 @@ contar x = sem (\x -> (\xs -> f x xs)) id id id ff ff (\f g -> (\xs -> f $ g xs)
         f x ((y,i):ys) = if x == y then (x,i+1) : ys else (y,i) : f x ys
         ff = (\i j f g -> (\xs -> f $ g xs))
 
+-- hay 4 rotaciones seguidas (empezando en el tope)
+esRot360 :: Pred (Dibujo a)
+esRot360 (Rotar (Rotar (Rotar (Rotar x)))) = True
+esRot360 (Basica x) = False
+esRot360 (Rotar x) = esRot360 x
+esRot360 (Espejar x) = esRot360 x
+esRot360 (Rot45 x) = esRot360 x
+esRot360 (Juntar _ _ x y) = esRot360 x || esRot360 y
+esRot360 (Apilar _ _ x y) = esRot360 x || esRot360 y
+esRot360 (Encimar x y) = esRot360 x || esRot360 y
 
+-- hay 2 espejados seguidos (empezando en el tope)
+esFlip2 :: Pred (Dibujo a)
+esFlip2 (Espejar (Espejar x)) = True
+esFlip2 (Basica x) = False
+esFlip2 (Rotar x) = esFlip2 x
+esFlip2 (Espejar x) = esFlip2 x
+esFlip2 (Rot45 x) = esFlip2 x
+esFlip2 (Juntar _ _ x y) = esFlip2 x || esFlip2 y
+esFlip2 (Apilar _ _ x y) = esFlip2 x || esFlip2 y
+esFlip2 (Encimar x y) = esFlip2 x || esFlip2 y
+
+-- la cadena que se toma como parámetro es la descripción
+-- del error.
+check :: Pred (Dibujo a) -> String -> Dibujo a -> Either String (Dibujo a)
+check f s x = if f x then Left s else Right x
 
