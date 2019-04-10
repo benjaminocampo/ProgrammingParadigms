@@ -90,3 +90,10 @@ juntar n m p q a b c = pictures [p a b' c, q (a V.+ b') (r' V.* b) c]
                     where r' = n / (m + n)
                           r = m / (m + n)
                           b' = r V.* b
+
+apilar :: Float -> Float -> FloatingPic -> FloatingPic -> Vector -> 
+            Vector -> Vector -> Picture
+apilar n m p q a b c = pictures [p (a V.+ c') b (r V.* c), q a b c']
+                        where r' = n / (m + n)
+                              r = m / (m + n)
+                              c' = r' V.* c
