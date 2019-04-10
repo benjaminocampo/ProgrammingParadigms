@@ -15,3 +15,13 @@ comp f 0 = id
 comp f n = f . (comp f (n-1))
 
 
+-- rotaciones de múltiplos de 90
+r180 :: Dibujo a -> Dibujo a
+r180 = Rotar . Rotar
+
+r270 :: Dibujo a -> Dibujo a
+r270 = Rotar . Rotar . Rotar
+
+-- Pone una figura sobre la otra, ambas ocupan el mismo espacio
+(.-.) :: Dibujo a -> Dibujo a -> Dibujo a
+(.-.) x y = Apilar 1 1 x y
