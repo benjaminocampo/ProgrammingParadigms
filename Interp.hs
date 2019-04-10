@@ -78,3 +78,15 @@ rotar p a b c = p (a V.+ b) c (zero V.- b)
 
 rot45 :: FloatingPic -> Vector -> Vector -> Vector -> Picture
 rot45 p a b c = p (a V.+ (half (b V.+ c))) (half b V.+ c) (half c V.- b)
+
+espejar :: FloatingPic -> Vector -> Vector -> Vector -> Picture
+espejar p a b c = p (a V.+ b) (zero V.- b) c
+
+encimar :: FloatingPic -> FloatingPic -> Vector -> Vector -> Vector -> Picture
+encimar p q a b c =  pictures [p a b c, q a b c]
+
+juntar :: Float -> Float -> FloatingPic -> FloatingPic -> Vector -> Vector -> Vector -> Picture
+juntar n m p q a b c = pictures [p a b' c, q (a V.+ b') (r' V.* b) c]
+                    where r' = n / (m + n)
+                          r = m / (m + n)
+                          b' = r V.* b
