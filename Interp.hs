@@ -64,7 +64,17 @@ transf f d (xs,ys) a b c  = translate (fst a') (snd a') .
   where ang = radToDeg $ argV b
         a' = a V.+ half (b V.+ c)
 
+interp :: Output a -> Output (Dibujo a)
+interp f (Basica x) = f x 
+interp f (Rotar x) = rotar (interp f x)
+interp f (Espejar x) = espejar (interp f x)
+interp f (Rot45 x) = rot45 (interp f x)
+interp f (Apilar n m x y) = apilar (toEnum n) (toEnum m) (interp f x) (interp f y)
+interp f (Juntar n m x y) = juntar (toEnum n) (toEnum m) (interp f x) (interp f y)
+interp f (Encimar x y) = encimar (interp f x) (interp f y)
 
--- Claramente esto sólo funciona para el ejemplo!
-interp :: Output () -> Output (Dibujo ())
-interp f () = f ()
+rotar :: FloatingPic -> Vector -> Vector -> Vector -> Picture
+rotar p a b c = p (a V.+ b) c (zero V.- b)
+
+rot45 :: FloatingPic -> Vector -> Vector -> Vector -> Picture
+rot45 p a b c = p (a V.+ (half (b V.+ c))) (half b V.+ c) (half c V.- b)
