@@ -5,6 +5,7 @@ import Graphics.UI.GLUT.Begin
 import Dibujo
 import Interp
 import qualified Basico.Ejemplo as E
+import qualified Basico.Escher as Escher
 
 data Conf a = Conf {
     basic :: Output a
@@ -20,11 +21,17 @@ ej x y = Conf {
               , height = y
               }
 
+escher x y = Conf {
+                    basic = Escher.interBas
+                  , fig = Escher.ejemplo
+                  , width = x
+                  , height = y
+                  }
 -- Dada una computación que construye una configuración, mostramos por
 -- pantalla la figura de la misma de acuerdo a la interpretación para
 -- las figuras básicas. Permitimos una computación para poder leer
 -- archivos, tomar argumentos, etc.
-initial :: IO (Conf ()) -> IO ()
+initial :: IO (Conf Escher.Escher) -> IO ()
 initial cf = cf >>= \cfg ->
                   let x  = width cfg
                       y  = height cfg
@@ -32,5 +39,7 @@ initial cf = cf >>= \cfg ->
   where withGrid p = pictures [p, color grey $ grid 10 (0,0) 100 10]
         grey = makeColorI 120 120 120 120
 
-win = InWindow "Nice Window" (200, 200) (0, 0)
-main = initial $ return (ej 100 100)
+win = InWindow "Paradigmas" (200, 200) (0, 0)
+--main :: IO ()
+--main = display win white $ return (escher 100 100)
+main = initial $ return (escher 100 100)

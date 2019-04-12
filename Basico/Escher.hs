@@ -11,10 +11,14 @@ interBas 1 = trian1
 interBas 2 = fShape
 interBas 3 = trian2
 
-ejemplo = dibujo_u (Basica 2)
+ejemplo = squarelimit 3 (Basica 3)
 
 fish2 p = Espejar (Rot45 p)
 fish3 p = r270 (fish2 p)
+
+squarelimit n p = noneto (esquina n p) (lado n p) (r270 (esquina n p)) (Rotar (lado n p)) (dibujo_u p) (r270 (lado n p)) (Rotar (esquina n p)) (r180 (lado n p)) (r180 (esquina n p)) 
+
+
 
 -- Dibujo u
 dibujo_u :: Dibujo Escher -> Dibujo Escher

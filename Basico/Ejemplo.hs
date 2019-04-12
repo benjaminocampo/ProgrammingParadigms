@@ -2,9 +2,9 @@ module Basico.Ejemplo where
 import Dibujo
 import Interp
 
-type Basica = ()
+type Basica = Integer
 ejemplo :: Dibujo Basica
-ejemplo = ()
+ejemplo = Basica 1
 
 interpBas :: Output Basica
-interpBas () = trian1
+interpBas 1 = trian1
