@@ -22,7 +22,7 @@ ej x y = Conf {
               }
 
 escher x y = Conf {
-                    basic = Escher.interBas
+                    basic = Escher.interpBC
                   , fig = Escher.ejemplo
                   , width = x
                   , height = y

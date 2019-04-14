@@ -14,7 +14,6 @@ comp :: (a -> a) -> Int -> a -> a
 comp f 0 = id
 comp f n = f . (comp f (n-1))
 
-
 -- rotaciones de múltiplos de 90
 r180 :: Dibujo a -> Dibujo a
 r180 = Rotar . Rotar
@@ -170,6 +169,7 @@ todoBien x = case check esRot360 s1 x of
                     Right x -> Right x
                 where s1 = "No hay rotacion de 360"
                       s2 = "No hay un flip"
+
 -- Borra 4 repeticions seguidas de Rotar
 noRot360 :: Dibujo a -> Dibujo a
 noRot360 (Rotar (Rotar (Rotar (Rotar x)))) = noRot360 x

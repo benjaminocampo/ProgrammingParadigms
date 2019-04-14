@@ -3,22 +3,25 @@ import Dibujo
 import Interp
 import Graphics.Gloss.Data.Picture
 
-type Escher = Integer
+type Escher = FC
 
-blanko = Basica 0
-interBas 0 = simple blank
-interBas 1 = trian1
-interBas 2 = fShape
-interBas 3 = trian2
+blanko = Basica (FC Blanko Blanco)
+v = Basica (FC Trian1 Violeta)
+b = Basica (FC Trian2 Rojo)
+x = Basica (FC TrianD Magenta)
+y = Basica (FC Rectan Azul)
+z = Basica (FC Efe Cyan)
 
-ejemplo = squarelimit 3 (Basica 3)
+interpBC = h
+
+--ejemplo = squarelimit 3 ((^^^) x ((.-.) v b))
+k = (^^^) y $ (^^^) ((^^^) ((.-.) v x) ((.-.) x v)) ((///) (Rot45 z) (Espejar (Rot45 z)))
+ejemplo = squarelimit 3 k
 
 fish2 p = Espejar (Rot45 p)
 fish3 p = r270 (fish2 p)
 
-squarelimit n p = noneto (esquina n p) (lado n p) (r270 (esquina n p)) (Rotar (lado n p)) (dibujo_u p) (r270 (lado n p)) (Rotar (esquina n p)) (r180 (lado n p)) (r180 (esquina n p)) 
-
-
+squarelimit n p = noneto (esquina n p) (lado n p) (r270 (esquina n p)) (Rotar (lado n p)) (dibujo_u p) (r270 (lado n p)) (Rotar (esquina n p)) (r180 (lado n p)) (r180 (esquina n p))
 
 -- Dibujo u
 dibujo_u :: Dibujo Escher -> Dibujo Escher
@@ -43,5 +46,7 @@ lado 0 p = blanko
 lado n p = cuarteto (lado (n - 1) p) (lado (n - 1) p) (Rotar (dibujo_t p)) (dibujo_t p)
 
 -- combinador de nueve figuras dentro de un espacio de dibujo
-noneto p q r s t u v w x = Apilar 2 1 (Juntar 2 1 p (Juntar 1 1 q r)) 
-                            (Apilar 1 1 (Juntar 2 1 s (Juntar 1 1 t u)) (Juntar 2 1 v (Juntar 1 1 w x))) 
+noneto p q r s t u v w x = Apilar 1 2 (Juntar 1 2 p (Juntar 1 1 q r)) (Apilar 1 1 (Juntar 1 2 s (Juntar 1 1 t u)) (Juntar 1 2 v (Juntar 1 1 w x)))
+
+
+ 

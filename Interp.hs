@@ -2,6 +2,7 @@ module Interp where
 import Graphics.Gloss
 import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Geometry.Angle
+import Graphics.Gloss.Data.Color
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
 
 import Dibujo
@@ -86,14 +87,52 @@ encimar :: FloatingPic -> FloatingPic -> Vector -> Vector -> Vector -> Picture
 encimar p q a b c =  pictures [p a b c, q a b c]
 
 juntar :: Float -> Float -> FloatingPic -> FloatingPic -> Vector -> Vector -> Vector -> Picture
-juntar n m p q a b c = pictures [p a b' c, q (a V.+ b') (r' V.* b) c]
+juntar m n p q a b c = pictures [p a b' c, q (a V.+ b') (r' V.* b) c]
                     where r' = n / (m + n)
                           r = m / (m + n)
                           b' = r V.* b
 
-apilar :: Float -> Float -> FloatingPic -> FloatingPic -> Vector -> 
-            Vector -> Vector -> Picture
-apilar n m p q a b c = pictures [p (a V.+ c') b (r V.* c), q a b c']
+apilar :: Float -> Float -> FloatingPic -> FloatingPic -> Vector -> Vector -> Vector -> Picture
+apilar m n p q a b c = pictures [p (a V.+ c') b (r V.* c), q a b c']
                         where r' = n / (m + n)
                               r = m / (m + n)
                               c' = r' V.* c
+
+-- formas y colores
+data Formas = Trian1 | Trian2 | TrianD | Rectan | Efe | Blanko
+data Colores = Rojo | Azul | Verde | Amarillo | Cyan | Magenta | Blanco | Negro | Rosa | Violeta | Celeste | Aqua | Chartre | Naranja
+
+formas Trian1 = trian1
+formas Trian2 = trian2
+formas TrianD = trianD
+formas Rectan = rectan
+formas Efe = fShape
+formas Blanko = simple blank
+
+colores Rojo = red
+colores Azul = blue
+colores Verde = green
+colores Amarillo = yellow
+colores Cyan = cyan
+colores Magenta = magenta
+colores Blanco = white
+colores Negro = black
+colores Rosa = rose
+colores Violeta = violet
+colores Celeste = azure
+colores Aqua = aquamarine
+colores Chartre = chartreuse
+colores Naranja = orange
+
+
+data FC = FC {
+    forma :: Formas
+  , colour :: Colores
+}
+
+g :: FloatingPic -> Color -> Vector -> Vector -> Vector -> Picture
+g t c x y z = color c $ t x y z
+
+h :: FC -> FloatingPic
+h fc = g (formas $ forma fc) (colores $ colour fc)
+------------------------------------------------------
